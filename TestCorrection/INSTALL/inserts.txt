@@ -1,0 +1,59 @@
+﻿INSERT INTO [dbo].[Role]
+           ([Name])
+     VALUES
+           ('administrator')
+GO
+
+@PASSWORD = '21232f297a57a5a743894a0e4a801fc3' //senha = "admin"
+
+INSERT INTO [dbo].[User]
+           ([RoleId]
+           ,[Name]
+           ,[CPF]
+           ,[Email]
+           ,[Password]
+           ,[PasswordQuestion]
+           ,[LastActivityDate]
+           ,[LastPasswordChangedDate]
+           ,[CreationDate])
+     VALUES
+           (1
+           ,'Admin'
+           ,'<seu cpf>'
+           ,'ADMIN@ADMIN.COM.BR'
+           ,'21232f297a57a5a743894a0e4a801fc3'
+           ,'bla'
+           ,getdate()
+           ,getdate()
+           ,getdate())
+GO
+
+INSERT INTO [dbo].[Question]
+           ([Type]
+           ,[Number]
+           ,[Descripton])
+     VALUES
+           ('discursiva'
+           ,1
+           ,'Question 1')
+GO
+
+INSERT INTO [dbo].[Question]
+           ([Type]
+           ,[Number]
+           ,[Descripton])
+     VALUES
+           ('discursiva'
+           ,2
+           ,'Question 2')
+GO
+
+INSERT INTO [dbo].[Question]
+           ([Type]
+           ,[Number]
+           ,[Descripton])
+     VALUES
+           ('discursiva'
+           ,3
+           ,'Question 3')
+GO

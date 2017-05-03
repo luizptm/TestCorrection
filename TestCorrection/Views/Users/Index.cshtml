@@ -1,0 +1,44 @@
+﻿@model IEnumerable<TestCorrection.ViewModels.UserVM>
+@using System.Web.Mvc;
+@using TestCorrection.ViewModels;
+@using TestCorrection.Resources;
+@using GridMvc.Html;
+@using GridMvc.Sorting;
+
+@{
+    ViewBag.Title = Resources.Users;
+}
+
+@{Html.RenderPartial("_ProgessAlert");}
+
+<div class="well" style="font-size:large;">
+    @Html.ActionLink("Usuários", "Index") &nbsp;&nbsp;&nbsp; @Html.ActionLink(Resources.New, "Create", null, new { @class = "btn btn-primary" })
+</div>
+<div class="row">
+    <div class="col-md-3 col-md-push-9">
+        <h4>@Resources.Details</h4>
+        <div id="details-content">
+            <p class="muted">
+                @Resources.SelectAItem
+            </p>
+        </div>
+    </div>
+    <div class="col-md-9 col-md-pull-3">
+        @{Html.RenderPartial("_ItemsGrid", Model);}
+    </div>
+</div>
+<script>
+    $(function () {
+        pageGrids.dataGrid.onRowSelect(function (e) {
+            var controller = document.location.pathname;
+            $.post(controller + "/GetDetails?id=" + e.row.Id, function (data) {
+            })
+            .done(function (data) {
+                $("#details-content").html(data.Content);
+            })
+            .fail(function (data) {
+                exibirErro(data, "", undefined);
+            });
+        });
+    });
+</script>

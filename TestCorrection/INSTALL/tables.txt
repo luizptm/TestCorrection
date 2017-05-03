@@ -1,0 +1,226 @@
+﻿USE [TestCorrection]
+GO
+/****** Object:  Table [dbo].[Candidate]    Script Date: 01/05/2017 09:36:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Candidate](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_Candidate] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Grade]    Script Date: 01/05/2017 09:36:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Grade](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Grade] [decimal](18, 0) NOT NULL,
+ CONSTRAINT [PK_Grade] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[ImageCandidate]    Script Date: 01/05/2017 09:36:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[ImageCandidate](
+	[QuestiontId] [int] NOT NULL,
+	[CandidateId] [int] NOT NULL,
+	[Image] [image] NOT NULL,
+	[Base64String] [varchar](max) NULL,
+	[InUse] [bit] NULL,
+ CONSTRAINT [PK_ImageCandidate] PRIMARY KEY CLUSTERED 
+(
+	[QuestiontId] ASC,
+	[CandidateId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Log]    Script Date: 01/05/2017 09:36:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Log](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Description] [nvarchar](max) NOT NULL,
+	[ModifiedDate] [datetime] NOT NULL,
+ CONSTRAINT [PK_Log] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Question]    Script Date: 01/05/2017 09:36:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Question](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Type] [nvarchar](max) NOT NULL,
+	[Number] [int] NOT NULL,
+	[Descripton] [nvarchar](max) NOT NULL,
+	[TeacherId] [int] NULL,
+	[InUse] [bit] NULL,
+ CONSTRAINT [PK_Question] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[QuestionGrade]    Script Date: 01/05/2017 09:36:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[QuestionGrade](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[QuestionId] [int] NOT NULL,
+	[GradeId] [int] NOT NULL,
+ CONSTRAINT [PK_QuestionGrade] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[QuestionResult]    Script Date: 01/05/2017 09:36:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[QuestionResult](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[CandidateId] [int] NOT NULL,
+	[QuestionId] [int] NOT NULL,
+	[Grade] [decimal](18, 0) NOT NULL,
+ CONSTRAINT [PK_QuestionResult] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Role]    Script Date: 01/05/2017 09:36:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Role](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+	[CreationDate]  AS (getdate()),
+ CONSTRAINT [PK_Role] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Teacher]    Script Date: 01/05/2017 09:36:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Teacher](
+	[IdUser] [int] NOT NULL,
+	[IsTeacher] [bit] NOT NULL,
+ CONSTRAINT [PK_Teacher] PRIMARY KEY CLUSTERED 
+(
+	[IdUser] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[User]    Script Date: 01/05/2017 09:36:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[User](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RoleId] [int] NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+	[CPF] [varchar](50) NOT NULL,
+	[Email] [nvarchar](max) NOT NULL,
+	[Password] [nvarchar](max) NOT NULL,
+	[PasswordQuestion] [nvarchar](max) NOT NULL,
+	[LastActivityDate] [datetime] NOT NULL,
+	[LastPasswordChangedDate] [datetime] NOT NULL,
+	[CreationDate] [datetime] NOT NULL,
+ CONSTRAINT [PK_BR_AccessControl_User] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+ALTER TABLE [dbo].[ImageCandidate]  WITH CHECK ADD  CONSTRAINT [FK_ImageCandidate_Candidate] FOREIGN KEY([CandidateId])
+REFERENCES [dbo].[Candidate] ([Id])
+GO
+ALTER TABLE [dbo].[ImageCandidate] CHECK CONSTRAINT [FK_ImageCandidate_Candidate]
+GO
+ALTER TABLE [dbo].[ImageCandidate]  WITH CHECK ADD  CONSTRAINT [FK_ImageCandidate_Question] FOREIGN KEY([QuestiontId])
+REFERENCES [dbo].[Question] ([Id])
+GO
+ALTER TABLE [dbo].[ImageCandidate] CHECK CONSTRAINT [FK_ImageCandidate_Question]
+GO
+ALTER TABLE [dbo].[Question]  WITH CHECK ADD  CONSTRAINT [FK_Question_Teacher] FOREIGN KEY([TeacherId])
+REFERENCES [dbo].[Teacher] ([IdUser])
+GO
+ALTER TABLE [dbo].[Question] CHECK CONSTRAINT [FK_Question_Teacher]
+GO
+ALTER TABLE [dbo].[QuestionGrade]  WITH CHECK ADD  CONSTRAINT [FK_QuestionGrade_Grade] FOREIGN KEY([GradeId])
+REFERENCES [dbo].[Grade] ([Id])
+GO
+ALTER TABLE [dbo].[QuestionGrade] CHECK CONSTRAINT [FK_QuestionGrade_Grade]
+GO
+ALTER TABLE [dbo].[QuestionGrade]  WITH CHECK ADD  CONSTRAINT [FK_QuestionGrade_Question] FOREIGN KEY([QuestionId])
+REFERENCES [dbo].[Question] ([Id])
+GO
+ALTER TABLE [dbo].[QuestionGrade] CHECK CONSTRAINT [FK_QuestionGrade_Question]
+GO
+ALTER TABLE [dbo].[QuestionResult]  WITH CHECK ADD  CONSTRAINT [FK_QuestionResult_Candidate] FOREIGN KEY([CandidateId])
+REFERENCES [dbo].[Candidate] ([Id])
+GO
+ALTER TABLE [dbo].[QuestionResult] CHECK CONSTRAINT [FK_QuestionResult_Candidate]
+GO
+ALTER TABLE [dbo].[QuestionResult]  WITH CHECK ADD  CONSTRAINT [FK_QuestionResult_Question1] FOREIGN KEY([QuestionId])
+REFERENCES [dbo].[Question] ([Id])
+GO
+ALTER TABLE [dbo].[QuestionResult] CHECK CONSTRAINT [FK_QuestionResult_Question1]
+GO
+ALTER TABLE [dbo].[Teacher]  WITH CHECK ADD  CONSTRAINT [FK_Teacher_User] FOREIGN KEY([IdUser])
+REFERENCES [dbo].[User] ([Id])
+GO
+ALTER TABLE [dbo].[Teacher] CHECK CONSTRAINT [FK_Teacher_User]
+GO
+ALTER TABLE [dbo].[User]  WITH CHECK ADD  CONSTRAINT [FK_User_Role] FOREIGN KEY([RoleId])
+REFERENCES [dbo].[Role] ([Id])
+GO
+ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_Role]
+GO

@@ -1,0 +1,19 @@
+﻿@model List<TestCorrection.Model.Model.Question>
+@using System.Web.Mvc;
+@using TestCorrection.Model.Model;
+@using TestCorrection.ViewModels;
+@using TestCorrection.Resources;
+@using GridMvc.Html;
+@using GridMvc.Sorting;
+
+@{
+    ViewDataDictionary<Question> dic = new ViewDataDictionary<Question>();
+}
+@{
+    @Html.Grid(Model).Named("dataGrid").Columns(columns =>
+{
+    columns.Add(m => m.Id).Titled(ModelMetadata.FromLambdaExpression<Question, int>(x => x.Id, dic).DisplayName);
+    columns.Add(m => m.Descripton).Titled(ModelMetadata.FromLambdaExpression<Question, string>(x => x.Descripton, dic).DisplayName);
+    columns.Add().Titled("Corrigir").Sanitized(false).Encoded(false).RenderValueAs(o => Html.ActionLink("Corrigir", "Corrigir", new { Id = o.Id }, new { @class = "btn btn-default" }));
+}).Sortable(true);
+}

@@ -1,0 +1,31 @@
+﻿@model PagedList.IPagedList<TestCorrection.Model.Model.Candidate>
+@using System.Web.Mvc;
+@using TestCorrection.Model.Model;
+@using TestCorrection.ViewModels;
+@using TestCorrection.Resources;
+@using GridMvc.Html;
+@using GridMvc.Sorting;
+@using PagedList;
+@using PagedList.Mvc;
+
+@{
+    ViewDataDictionary<Candidate> dic = new ViewDataDictionary<Candidate>();
+}
+@{
+    @Html.Grid(Model).Named("dataGrid").Columns(columns =>
+    {
+        columns.Add(m => m.Id).Titled(ModelMetadata.FromLambdaExpression<Candidate, int>(x => x.Id, dic).DisplayName);
+        columns.Add(m => m.Name).Titled(ModelMetadata.FromLambdaExpression<Candidate, string>(x => x.Name, dic).DisplayName).Filterable(true);
+        columns.Add().Titled("Detalhes").Sanitized(false).Encoded(false).RenderValueAs(o => Html.ActionLink("Detalhes", "Details", new { Id = o.Id }, new { @class = "btn btn-default" }));
+        columns.Add().Titled(Resources.Edit).Sanitized(false).Encoded(false).RenderValueAs(o => Html.ActionLink(Resources.Edit, "Edit", new { Id = o.Id }, new { @class = "btn btn-default" }));
+        columns.Add().Titled("Excluir").Sanitized(false).Encoded(false).RenderValueAs(o => Html.ActionLink("Excluir", "Delete", new { Id = o.Id }, new {@class="btn btn-warning"}));
+    }).Sortable(true);
+}
+<div>
+    <br />
+    @Resources.Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) @Resources.Of @Model.PageCount
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index",
+            new { page, grid_column = ViewBag.grid_column, grid_dir = ViewBag.grid_dir }),
+            PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.PageNumbersOnly, 
+            new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "list" }))
+</div>

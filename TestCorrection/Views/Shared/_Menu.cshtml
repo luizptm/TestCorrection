@@ -1,0 +1,17 @@
+﻿@using TestCorrection.Resources;
+@{
+    string username = "";
+    if (Context.User != null)
+    {
+        username = Context.User.Identity.Name;
+        username = User.Identity.Name.Replace(@"BRASIL\", "");
+    }
+    <li>@Html.ActionLink("Usuários", "Index", "Users", null, new { @class = "" })</li>
+    <li>@Html.ActionLink("Corrigir", "Index", "Corrigir", null, new { @class = "" })</li>
+    <li>@Html.ActionLink("Candidatos", "Index", "Candidate", null, new { @class = "" })</li>
+    <li>@Html.ActionLink("Elaborar Questões", "Index", "Question", null, new { @class = "" })</li>
+    @*<li>@Html.ActionLink("Cadastrar Notas", "Index", "Grade", null, new { @class = "" })</li>*@
+    <li>@Html.ActionLink("Atribuir Grade", "Index", "QuestionGrade", null, new { @class = "" })</li>
+    @*<li>@Html.ActionLink("Corrigir Questões", "Index", "QuestionResult", null, new { @class = "" })</li>*@
+
+}

@@ -1,0 +1,41 @@
+﻿@model PagedList.IPagedList<TestCorrection.ViewModels.QuestionVM>
+@using System.Web.Mvc;
+@using TestCorrection.Model;
+@using TestCorrection.ViewModels;
+@using TestCorrection.Resources;
+@using GridMvc.Html;
+@using GridMvc.Sorting;
+@using PagedList;
+@using PagedList.Mvc;
+@{
+    ViewDataDictionary<QuestionVM> dic = new ViewDataDictionary<QuestionVM>();
+}
+@if (Model.Count() > 0)
+{
+    @Html.Grid(Model).Named("dataGrid").Columns(columns =>
+    {
+        columns.Add(m => m.Id).Titled(ModelMetadata.FromLambdaExpression<QuestionVM, int>(x => x.Id, dic).DisplayName);
+        columns.Add(m => m.Number).Titled(ModelMetadata.FromLambdaExpression<QuestionVM, int>(x => x.Number, dic).DisplayName).Filterable(true);
+        columns.Add(m => m.Descripton).Titled(ModelMetadata.FromLambdaExpression<QuestionVM, string>(x => x.Descripton, dic).DisplayName).Filterable(true);
+        columns.Add().Titled("Corrigir").Sanitized(false).Encoded(false).RenderValueAs(o => Html.ActionLink("Corrigir", "Correct", "MainSite", new { Id = o.Id }, new { @class = "btn btn-default" }));
+    })
+        }
+
+    <div>
+        <br />
+        @Resources.Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) @Resources.Of @Model.PageCount
+        @Html.PagedListPager((IPagedList)Model, page => Url.Action("Usuarios",
+            new { SendingList = ViewBag.SendingList, page, grid_column = ViewBag.grid_column, grid_dir = ViewBag.grid_dir, user_name = ViewBag.CurrentFilter }),
+            PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.PageNumbersOnly, new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "usuarios" }))
+    </div>
+}
+else
+{
+    <table class="table table-striped grid-table">
+        <tr class="grid-empty-text">
+            <td>
+                @Resources.NoDataToShow
+            </td>
+        </tr>
+    </table>
+}

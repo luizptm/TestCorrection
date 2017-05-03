@@ -1,0 +1,652 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TestCorrectionModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Candidate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Grade">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Grade" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ImageCandidate">
+          <Key>
+            <PropertyRef Name="QuestiontId" />
+            <PropertyRef Name="CandidateId" />
+          </Key>
+          <Property Name="QuestiontId" Type="int" Nullable="false" />
+          <Property Name="CandidateId" Type="int" Nullable="false" />
+          <Property Name="Image" Type="image" Nullable="false" />
+          <Property Name="Base64String" Type="varchar(max)" />
+          <Property Name="InUse" Type="bit" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ModifiedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Number" Type="int" Nullable="false" />
+          <Property Name="Descripton" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="TeacherId" Type="int" />
+          <Property Name="InUse" Type="bit" />
+        </EntityType>
+        <EntityType Name="QuestionGrade">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QuestionId" Type="int" Nullable="false" />
+          <Property Name="GradeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="QuestionResult">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CandidateId" Type="int" Nullable="false" />
+          <Property Name="QuestionId" Type="int" Nullable="false" />
+          <Property Name="Grade" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Teacher">
+          <Key>
+            <PropertyRef Name="IdUser" />
+          </Key>
+          <Property Name="IdUser" Type="int" Nullable="false" />
+          <Property Name="IsTeacher" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CPF" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PasswordQuestion" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="LastActivityDate" Type="datetime" Nullable="false" />
+          <Property Name="LastPasswordChangedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ImageCandidate_Candidate">
+          <End Role="Candidate" Type="Self.Candidate" Multiplicity="1" />
+          <End Role="ImageCandidate" Type="Self.ImageCandidate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candidate">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ImageCandidate">
+              <PropertyRef Name="CandidateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ImageCandidate_Question">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="ImageCandidate" Type="Self.ImageCandidate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ImageCandidate">
+              <PropertyRef Name="QuestiontId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Question_Teacher">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="0..1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="IdUser" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="TeacherId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuestionGrade_Grade">
+          <End Role="Grade" Type="Self.Grade" Multiplicity="1" />
+          <End Role="QuestionGrade" Type="Self.QuestionGrade" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="QuestionGrade">
+              <PropertyRef Name="GradeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuestionGrade_Question">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="QuestionGrade" Type="Self.QuestionGrade" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="QuestionGrade">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuestionResult_Candidate">
+          <End Role="Candidate" Type="Self.Candidate" Multiplicity="1" />
+          <End Role="QuestionResult" Type="Self.QuestionResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candidate">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="QuestionResult">
+              <PropertyRef Name="CandidateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuestionResult_Question1">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="QuestionResult" Type="Self.QuestionResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="QuestionResult">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Teacher_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Teacher">
+              <PropertyRef Name="IdUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TestCorrectionModelStoreContainer">
+          <EntitySet Name="Candidate" EntityType="Self.Candidate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Grade" EntityType="Self.Grade" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ImageCandidate" EntityType="Self.ImageCandidate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Log" EntityType="Self.Log" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="QuestionGrade" EntityType="Self.QuestionGrade" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="QuestionResult" EntityType="Self.QuestionResult" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Teacher" EntityType="Self.Teacher" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ImageCandidate_Candidate" Association="Self.FK_ImageCandidate_Candidate">
+            <End Role="Candidate" EntitySet="Candidate" />
+            <End Role="ImageCandidate" EntitySet="ImageCandidate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ImageCandidate_Question" Association="Self.FK_ImageCandidate_Question">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="ImageCandidate" EntitySet="ImageCandidate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_Teacher" Association="Self.FK_Question_Teacher">
+            <End Role="Teacher" EntitySet="Teacher" />
+            <End Role="Question" EntitySet="Question" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuestionGrade_Grade" Association="Self.FK_QuestionGrade_Grade">
+            <End Role="Grade" EntitySet="Grade" />
+            <End Role="QuestionGrade" EntitySet="QuestionGrade" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuestionGrade_Question" Association="Self.FK_QuestionGrade_Question">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="QuestionGrade" EntitySet="QuestionGrade" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuestionResult_Candidate" Association="Self.FK_QuestionResult_Candidate">
+            <End Role="Candidate" EntitySet="Candidate" />
+            <End Role="QuestionResult" EntitySet="QuestionResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuestionResult_Question1" Association="Self.FK_QuestionResult_Question1">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="QuestionResult" EntitySet="QuestionResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Teacher_User" Association="Self.FK_Teacher_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Teacher" EntitySet="Teacher" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TestCorrectionModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Number" Type="Int32" Nullable="false" />
+          <Property Name="Descripton" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="QuestionGrade" Relationship="Self.FK_QuestionGrade_Question" FromRole="Question" ToRole="QuestionGrade" />
+          <Property Name="TeacherId" Type="Int32" />
+          <Property Name="InUse" Type="Boolean" />
+          <NavigationProperty Name="Teacher" Relationship="TestCorrectionModel.FK_Question_Teacher" FromRole="Question" ToRole="Teacher" />
+          <NavigationProperty Name="QuestionResults" Relationship="TestCorrectionModel.FK_QuestionResult_Question1" FromRole="Question" ToRole="QuestionResult" />
+          <NavigationProperty Name="ImageCandidates" Relationship="TestCorrectionModel.FK_ImageCandidate_Question" FromRole="Question" ToRole="ImageCandidate" />
+        </EntityType>
+        <EntityType Name="QuestionGrade">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuestionId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Question" Relationship="Self.FK_QuestionGrade_Question" FromRole="QuestionGrade" ToRole="Question" />
+          <Property Name="GradeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Grade1" Relationship="TestCorrectionModel.FK_QuestionGrade_Grade" FromRole="QuestionGrade" ToRole="Grade" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Users" Relationship="TestCorrectionModel.FK_User_Role" FromRole="Role" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Teacher">
+          <Key>
+            <PropertyRef Name="IdUser" />
+          </Key>
+          <Property Name="IdUser" Type="Int32" Nullable="false" />
+          <Property Name="IsTeacher" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="TestCorrectionModel.FK_Teacher_User" FromRole="Teacher" ToRole="User" />
+          <NavigationProperty Name="Questions" Relationship="TestCorrectionModel.FK_Question_Teacher" FromRole="Teacher" ToRole="Question" />
+        </EntityType>
+        <Association Name="FK_QuestionGrade_Question">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="QuestionGrade" Type="Self.QuestionGrade" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="QuestionGrade">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Log" EntityType="Self.Log" />
+          <EntitySet Name="Question" EntityType="Self.Question" />
+          <EntitySet Name="QuestionGrade" EntityType="Self.QuestionGrade" />
+          <EntitySet Name="Role" EntityType="Self.Role" />
+          <EntitySet Name="Teacher" EntityType="Self.Teacher" />
+          <AssociationSet Name="FK_QuestionGrade_Question" Association="Self.FK_QuestionGrade_Question">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="QuestionGrade" EntitySet="QuestionGrade" />
+          </AssociationSet>
+          <EntitySet Name="Users" EntityType="TestCorrectionModel.User" />
+          <AssociationSet Name="FK_User_Role" Association="TestCorrectionModel.FK_User_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Teacher_User" Association="TestCorrectionModel.FK_Teacher_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Teacher" EntitySet="Teacher" />
+          </AssociationSet>
+          <EntitySet Name="Candidates" EntityType="TestCorrectionModel.Candidate" />
+          <EntitySet Name="Grades" EntityType="TestCorrectionModel.Grade" />
+          <AssociationSet Name="FK_QuestionGrade_Grade" Association="TestCorrectionModel.FK_QuestionGrade_Grade">
+            <End Role="Grade" EntitySet="Grades" />
+            <End Role="QuestionGrade" EntitySet="QuestionGrade" />
+          </AssociationSet>
+          <EntitySet Name="QuestionResults" EntityType="TestCorrectionModel.QuestionResult" />
+          <AssociationSet Name="FK_QuestionResult_Candidate" Association="TestCorrectionModel.FK_QuestionResult_Candidate">
+            <End Role="Candidate" EntitySet="Candidates" />
+            <End Role="QuestionResult" EntitySet="QuestionResults" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_Teacher" Association="TestCorrectionModel.FK_Question_Teacher">
+            <End Role="Teacher" EntitySet="Teacher" />
+            <End Role="Question" EntitySet="Question" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuestionResult_Question1" Association="TestCorrectionModel.FK_QuestionResult_Question1">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="QuestionResult" EntitySet="QuestionResults" />
+          </AssociationSet>
+          <EntitySet Name="ImageCandidates" EntityType="TestCorrectionModel.ImageCandidate" />
+          <AssociationSet Name="FK_ImageCandidate_Candidate" Association="TestCorrectionModel.FK_ImageCandidate_Candidate">
+            <End Role="Candidate" EntitySet="Candidates" />
+            <End Role="ImageCandidate" EntitySet="ImageCandidates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ImageCandidate_Question" Association="TestCorrectionModel.FK_ImageCandidate_Question">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="ImageCandidate" EntitySet="ImageCandidates" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CPF" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordQuestion" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LastActivityDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastPasswordChangedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Role" Relationship="TestCorrectionModel.FK_User_Role" FromRole="User" ToRole="Role" />
+          <NavigationProperty Name="Teacher" Relationship="TestCorrectionModel.FK_Teacher_User" FromRole="User" ToRole="Teacher" />
+        </EntityType>
+        <Association Name="FK_User_Role">
+          <End Type="TestCorrectionModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="TestCorrectionModel.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Teacher_User">
+          <End Type="TestCorrectionModel.User" Role="User" Multiplicity="1" />
+          <End Type="TestCorrectionModel.Teacher" Role="Teacher" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Teacher">
+              <PropertyRef Name="IdUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Candidate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="QuestionResults" Relationship="TestCorrectionModel.FK_QuestionResult_Candidate" FromRole="Candidate" ToRole="QuestionResult" />
+          <NavigationProperty Name="ImageCandidates" Relationship="TestCorrectionModel.FK_ImageCandidate_Candidate" FromRole="Candidate" ToRole="ImageCandidate" />
+        </EntityType>
+        <EntityType Name="Grade">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Grade1" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <NavigationProperty Name="QuestionGrades" Relationship="TestCorrectionModel.FK_QuestionGrade_Grade" FromRole="Grade" ToRole="QuestionGrade" />
+        </EntityType>
+        <Association Name="FK_QuestionGrade_Grade">
+          <End Type="TestCorrectionModel.Grade" Role="Grade" Multiplicity="1" />
+          <End Type="TestCorrectionModel.QuestionGrade" Role="QuestionGrade" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="QuestionGrade">
+              <PropertyRef Name="GradeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="QuestionResult">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CandidateId" Type="Int32" Nullable="false" />
+          <Property Name="QuestionId" Type="Int32" Nullable="false" />
+          <Property Name="Grade" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <NavigationProperty Name="Candidate" Relationship="TestCorrectionModel.FK_QuestionResult_Candidate" FromRole="QuestionResult" ToRole="Candidate" />
+          <NavigationProperty Name="Question" Relationship="TestCorrectionModel.FK_QuestionResult_Question1" FromRole="QuestionResult" ToRole="Question" />
+        </EntityType>
+        <Association Name="FK_QuestionResult_Candidate">
+          <End Type="TestCorrectionModel.Candidate" Role="Candidate" Multiplicity="1" />
+          <End Type="TestCorrectionModel.QuestionResult" Role="QuestionResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candidate">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="QuestionResult">
+              <PropertyRef Name="CandidateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Question_Teacher">
+          <End Type="TestCorrectionModel.Teacher" Role="Teacher" Multiplicity="0..1" />
+          <End Type="TestCorrectionModel.Question" Role="Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="IdUser" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="TeacherId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuestionResult_Question1">
+          <End Type="TestCorrectionModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="TestCorrectionModel.QuestionResult" Role="QuestionResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="QuestionResult">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ImageCandidate">
+          <Key>
+            <PropertyRef Name="QuestiontId" />
+            <PropertyRef Name="CandidateId" />
+          </Key>
+          <Property Name="QuestiontId" Type="Int32" Nullable="false" />
+          <Property Name="CandidateId" Type="Int32" Nullable="false" />
+          <Property Name="Image" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="Base64String" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="InUse" Type="Boolean" />
+          <NavigationProperty Name="Candidate" Relationship="TestCorrectionModel.FK_ImageCandidate_Candidate" FromRole="ImageCandidate" ToRole="Candidate" />
+          <NavigationProperty Name="Question" Relationship="TestCorrectionModel.FK_ImageCandidate_Question" FromRole="ImageCandidate" ToRole="Question" />
+        </EntityType>
+        <Association Name="FK_ImageCandidate_Candidate">
+          <End Type="TestCorrectionModel.Candidate" Role="Candidate" Multiplicity="1" />
+          <End Type="TestCorrectionModel.ImageCandidate" Role="ImageCandidate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candidate">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ImageCandidate">
+              <PropertyRef Name="CandidateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ImageCandidate_Question">
+          <End Type="TestCorrectionModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="TestCorrectionModel.ImageCandidate" Role="ImageCandidate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ImageCandidate">
+              <PropertyRef Name="QuestiontId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="TestCorrectionModelStoreContainer" CdmEntityContainer="Entities">
+    <EntitySetMapping Name="Log">
+      <EntityTypeMapping TypeName="IsTypeOf(TestCorrectionModel.Log)">
+        <MappingFragment StoreEntitySet="Log">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Question">
+      <EntityTypeMapping TypeName="IsTypeOf(TestCorrectionModel.Question)">
+        <MappingFragment StoreEntitySet="Question">
+          <ScalarProperty Name="InUse" ColumnName="InUse" />
+                <ScalarProperty Name="TeacherId" ColumnName="TeacherId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Descripton" ColumnName="Descripton" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuestionGrade">
+      <EntityTypeMapping TypeName="IsTypeOf(TestCorrectionModel.QuestionGrade)">
+        <MappingFragment StoreEntitySet="QuestionGrade">
+          <ScalarProperty Name="GradeId" ColumnName="GradeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Role">
+      <EntityTypeMapping TypeName="IsTypeOf(TestCorrectionModel.Role)">
+        <MappingFragment StoreEntitySet="Role">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Teacher">
+      <EntityTypeMapping TypeName="IsTypeOf(TestCorrectionModel.Teacher)">
+        <MappingFragment StoreEntitySet="Teacher">
+          <ScalarProperty Name="IdUser" ColumnName="IdUser" />
+          <ScalarProperty Name="IsTeacher" ColumnName="IsTeacher" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="TestCorrectionModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="LastPasswordChangedDate" ColumnName="LastPasswordChangedDate" />
+                <ScalarProperty Name="LastActivityDate" ColumnName="LastActivityDate" />
+                <ScalarProperty Name="PasswordQuestion" ColumnName="PasswordQuestion" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="CPF" ColumnName="CPF" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Candidates">
+            <EntityTypeMapping TypeName="TestCorrectionModel.Candidate">
+              <MappingFragment StoreEntitySet="Candidate">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Grades">
+            <EntityTypeMapping TypeName="TestCorrectionModel.Grade">
+              <MappingFragment StoreEntitySet="Grade">
+                <ScalarProperty Name="Grade1" ColumnName="Grade" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="QuestionResults">
+            <EntityTypeMapping TypeName="TestCorrectionModel.QuestionResult">
+              <MappingFragment StoreEntitySet="QuestionResult">
+                <ScalarProperty Name="Grade" ColumnName="Grade" />
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="CandidateId" ColumnName="CandidateId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ImageCandidates">
+            <EntityTypeMapping TypeName="TestCorrectionModel.ImageCandidate">
+              <MappingFragment StoreEntitySet="ImageCandidate">
+                <ScalarProperty Name="InUse" ColumnName="InUse" />
+                <ScalarProperty Name="Base64String" ColumnName="Base64String" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="CandidateId" ColumnName="CandidateId" />
+                <ScalarProperty Name="QuestiontId" ColumnName="QuestiontId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

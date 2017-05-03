@@ -1,0 +1,27 @@
+﻿@model TestCorrection.ViewModels.QuestionGradeVM
+
+<div>
+    <h4>QuestionGrade</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Question.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Question.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Grade1.Id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Grade1.Id)
+        </dd>
+
+    </dl>
+</div>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Voltar para a Lista", "Index")
+</p>
