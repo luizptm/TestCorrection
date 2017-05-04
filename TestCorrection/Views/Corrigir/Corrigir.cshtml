@@ -14,7 +14,7 @@
         <h4>Correção da Prova</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <input type="hidden" name="CandidateId" value="@Model.CandidateId" />
+        <input type="text" name="CandidateId" value="@Model.CandidateId" />
         <input type="hidden" name="QuestiontId" value="@Model.QuestiontId" />
         @Html.HiddenFor(model => model.Image)
         @Html.HiddenFor(model => model.Base64String)
