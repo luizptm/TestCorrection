@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Drawing;
 using System.Linq;
 using System.Net;
@@ -86,40 +87,11 @@ namespace TestCorrection.Controllers
             }
             if (e != null)
             {
-                IEnumerable<Grade> dbList = new List<Grade>();
-                IEnumerable<QuestionGrade> dbListQuestionGrade = db.QuestionGrade;
-                if (dbListQuestionGrade.Count() == 0)
-                    dbList = db.Grade;
-                else
-                {
-                    dbListQuestionGrade = db.QuestionGrade.Where(x => x.QuestionId == e.Id);
-                    if (dbListQuestionGrade.Count() == 0)
-                    {
-                        dbList = db.Grade;
-                    }
-                    else
-                    {
-                        dbList = db.QuestionGrade.Where(x => x.QuestionId == e.Id).Select<QuestionGrade, Grade>(x => x.Grade1).ToList<Grade>();
-                    }
-                }
-                
+                IEnumerable<Grade> dbList = GetGrade(e.Id);
                 ViewBag.Grade = new SelectList(dbList, "Id", "Grade1");
 
-                Int32 candidateId = db.Database.SqlQuery<Candidate>("SELECT TOP 1 Id, Name FROM Candidate c INNER JOIN ImageCandidate ic ON c.Id = ic.CandidateId WHERE " +
-                                                                        "Id NOT IN (SELECT CandidateId from QuestionResult WHERE " +
-                                                                        "QuestionId = " + e.Id + ") " +
-                                                                        "ORDER BY NEWID()").Single().Id;
-                
-                IQueryable<ImageCandidate> query = db.ImageCandidate.Where(x => x.CandidateId == candidateId && x.QuestiontId == e.Id);
-                ImageCandidate ic = query != null && query.Count() > 0 ? query.Single() : null;
-                if (query != null && ic != null)
-                {
-                    ic.InUse = true;
-                    db.Entry(ic).State = EntityState.Modified;
-                    db.SaveChanges();
-
-                    return View(ic);
-                }
+                int QuestionId = e.Id;
+                return ShowView(QuestionId, false);
             }
 
             ModelState.AddModelError("error", "Erro inesperado. Tente novamente");
@@ -150,32 +122,60 @@ namespace TestCorrection.Controllers
                 db.Entry(ic).State = EntityState.Modified;
                 db.SaveChanges();
 
-                ///
-                int questionId = e.QuestionId;
-                ic = new ImageCandidate();
-
-                IEnumerable<Grade> dbList = db.Grade;
+                IEnumerable<Grade> dbList = GetGrade(ic.QuestiontId);
                 ViewBag.Grade = new SelectList(dbList, "Id", "Grade1");
 
-                Int32 candidateId = db.Database.SqlQuery<Candidate>("SELECT TOP 1 Id, Name FROM Candidate c INNER JOIN ImageCandidate ic ON c.Id = ic.CandidateId WHERE " +
-                                                                        "Id NOT IN (SELECT CandidateId from QuestionResult WHERE " +
-                                                                        "QuestionId = " + e.Id + ") " +
-                                                                        "ORDER BY NEWID()").Single().Id;
-
-                IQueryable<ImageCandidate> query = db.ImageCandidate.Where(x => x.CandidateId == candidateId && x.QuestiontId == e.Id);
-                ic = query != null && query.Count() > 0 ? query.Single() : null;
-                if (query != null && ic != null)
-                {
-                    ic.InUse = true;
-                    db.Entry(ic).State = EntityState.Modified;
-                    db.SaveChanges();
-
-                    return View("Corrigir", ic);
-                }
+                int QuestionId = ic.QuestiontId;
+                return ShowView(QuestionId, true);
             }
 
             ModelState.AddModelError("error", "Erro inesperado. Tente novamente");
             return RedirectToAction("Index");
+        }
+
+        private IEnumerable<Grade> GetGrade(int questionId)
+        {
+            IEnumerable<Grade> dbList = new List<Grade>();
+            IEnumerable<QuestionGrade> dbListQuestionGrade = db.QuestionGrade;
+            if (dbListQuestionGrade.Count() == 0)
+                dbList = db.Grade;
+            else
+            {
+                dbListQuestionGrade = db.QuestionGrade.Where(x => x.QuestionId == questionId);
+                if (dbListQuestionGrade.Count() == 0)
+                {
+                    dbList = db.Grade;
+                }
+                else
+                {
+                    dbList = db.QuestionGrade.Where(x => x.QuestionId == questionId).Select<QuestionGrade, Grade>(x => x.Grade1).ToList<Grade>();
+                }
+            }
+
+            return dbList;
+        }
+
+        private ViewResult ShowView(int QuestionId, bool InUse)
+        {
+            ImageCandidate ic = new ImageCandidate();
+            DbRawSqlQuery<Candidate> queryCandidate = db.Database.SqlQuery<Candidate>("SELECT TOP 1 Id, Name FROM Candidate c INNER JOIN ImageCandidate ic ON c.Id = ic.CandidateId " +
+                                                        "WHERE ic.QuestiontId = " + QuestionId + " AND " +
+                                                        "Id NOT IN (SELECT CandidateId from QuestionResult WHERE " +
+                                                        "QuestionId = " + QuestionId + ") " +
+                                                        "ORDER BY NEWID()");
+            Int32 candidateId = queryCandidate != null ? queryCandidate.Single().Id : 0;
+
+            IQueryable<ImageCandidate> query = db.ImageCandidate.Where(x => x.CandidateId == candidateId && x.QuestiontId == QuestionId);
+            ic = query != null && query.Count() > 0 ? query.Single() : null;
+            if (query != null && ic != null)
+            {
+                ic.InUse = false;
+                db.Entry(ic).State = EntityState.Modified;
+                db.SaveChanges();
+
+                return View("Corrigir", ic);
+            }
+            return View("Index");
         }
     }
 }
