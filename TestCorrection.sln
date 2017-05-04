@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCorrection.Library", "T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCorrection.Model", "TestCorrection.Model\TestCorrection.Model.csproj", "{B5BBA9A5-D7A7-4171-B191-00A10C5C1302}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCorrection.Testing", "TestCorrection.Testing\TestCorrection.Testing.csproj", "{15EE51A2-37CA-48AF-8EC1-24EFE0BF5E42}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{B5BBA9A5-D7A7-4171-B191-00A10C5C1302}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5BBA9A5-D7A7-4171-B191-00A10C5C1302}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5BBA9A5-D7A7-4171-B191-00A10C5C1302}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15EE51A2-37CA-48AF-8EC1-24EFE0BF5E42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15EE51A2-37CA-48AF-8EC1-24EFE0BF5E42}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15EE51A2-37CA-48AF-8EC1-24EFE0BF5E42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15EE51A2-37CA-48AF-8EC1-24EFE0BF5E42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
